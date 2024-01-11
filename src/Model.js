@@ -1,34 +1,81 @@
-let Model = {
-    max_num: 100,
-    attempt_num: 10,
-    rand_num: 0,
-    current_attempt: 0,
+import {
+    messageOutput
+} from "./View.js";
 
-    rand_gen: function () {
-        this.rand_num = Math.floor(Math.random() * this.max_num) + 1;
-    },
+import {
+    addAttempt,
+    editGame
+} from "./db.js";
 
-    reset_game: function () {
-        this.current_attempt = 0;
-        this.rand_num = 0;
-    },
+export const
+    blockGreeting = document.getElementById("greeting"),
+    blockInformation = document.getElementById("information"),
+    blockShowGame = document.getElementById("show-game"),
+    blockMessage = document.getElementById("message"),
+    blockResult = document.getElementById("result"),
+    blockResultText = document.getElementById("resultText"),
+    blockGameMenu = document.getElementById("GameMenu"),
+    blockList = document.getElementById("list"),
+    blockTextList = document.getElementById("textList");
 
-    guess_num: function (user_input) {
-        if (this.current_attempt >= this.attempt_num) {
-            View.Message("Вы проиграли! Попыток больше нет. Число было " + this.rand_num);
-            return;
-        }
-        if (user_input === this.rand_num) {
-            View.Message("Поздравляем! Вы угадали число!");
-            return;
-        } else {
-            if (user_input > this.rand_num) {
-                View.Message("Загаданное число меньше!");
-            } else if (user_input < this.rand_num) {
-                View.Message("Загаданное число больше!");
+export const
+    btnGoMenu = document.getElementById("goMenu"),
+    btnNextGameMenu = document.getElementById("nextInfo"),
+    btnNextShowGame = document.getElementById("nextShowGame"),
+    btnCheckNumber = document.getElementById("checkNumber"),
+    btnReplayGame = document.getElementById("replayGame"),
+    btnNewGame = document.getElementById("newGame"),
+    btnListAllGame = document.getElementById("listAllGame"),
+    btnListWinGame = document.getElementById("listWinGame"),
+    btnListLostGame = document.getElementById("listLostGame");
+
+export const
+    fieldName = document.getElementById("name"),
+    field_getNumber = document.getElementById("getNumber");
+
+export const
+    textInfo = document.getElementById("info");
+
+export const
+    numAttempt = 10,
+    maxNum = 100;
+
+export let
+    var_numAttempt = numAttempt,
+    hiddenNumber;
+
+let getNumber;
+
+export function checkNumber() {
+    if (field_getNumber.value === "") {
+        alert("Enter the number");
+    } else {
+        getNumber = Number(field_getNumber.value);
+        if (var_numAttempt !== 1) {
+            if (getNumber < hiddenNumber) {
+                var_numAttempt--;
+                messageOutput("less");
+                addAttempt((numAttempt - var_numAttempt), getNumber, "less");
             }
-            this.current_attempt += 1;
+            if (getNumber > hiddenNumber) {
+                var_numAttempt--;
+                messageOutput("more");
+                addAttempt((numAttempt - var_numAttempt), getNumber, "more");
+            }
+            if (getNumber === hiddenNumber) {
+                messageOutput("win");
+                addAttempt((numAttempt - var_numAttempt), getNumber, "win");
+                editGame("win");
+            }
+        } else {
+            messageOutput("lost");
+            editGame("lost");
+            addAttempt((numAttempt - var_numAttempt + 1), getNumber, "loss");
         }
     }
-};
-    
+}
+
+export function makeNumber() {
+    hiddenNumber = Math.floor(Math.random() * (maxNum - 1)) + 1;
+    var_numAttempt = numAttempt;
+}

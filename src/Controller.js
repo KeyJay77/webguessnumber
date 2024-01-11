@@ -1,29 +1,34 @@
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('start_game').addEventListener('click', function () {
-        document.getElementById('start_page').style.display = 'none';
-        document.getElementById('game_page').style.display = 'block';
-        document.getElementById('rules').style.display = 'none';
-        document.getElementById('input_num').value = '';
+import {
+    startGame,
+    informationOutput,
+    showGameOutput,
+    GameMenu
+} from './View.js';
 
-        Model.reset_game();
-        Model.rand_gen();
-    });
+import {
+    btnNextGameMenu,
+    btnNextShowGame,
+    btnCheckNumber,
+    btnReplayGame,
+    btnNewGame,
+    btnGoMenu,
+    checkNumber,
+    btnListAllGame,
+    btnListWinGame,
+    btnListLostGame
+} from "./Model.js";
 
-    document.getElementById('check_answer').addEventListener('click', function () {
-        let user_input = parseInt(document.getElementById('input_num').value);
-        let num = Model.guess_num(user_input);
-    });
+import {getAllGame, getLossGame, getWinGame, startDB} from "./db.js";
 
-    document.getElementById('leave_game').addEventListener('click', function () {
-        document.getElementById('start_page').style.display = 'block';
-        document.getElementById('game_page').style.display = 'none';
-        document.getElementById('rules').style.display = 'none';
-        document.getElementById('input_num').value = '';
+startGame();
 
-        Model.reset_game();
-    });
-
-    document.getElementById('display_rules').addEventListener('click', function () {
-        document.getElementById('rules').style.display = 'block';
-    });
-});
+document.addEventListener("DOMContentLoaded", startDB);
+btnNextGameMenu.addEventListener("click", GameMenu);
+btnNewGame.addEventListener("click", informationOutput);
+btnNextShowGame.addEventListener("click", showGameOutput);
+btnCheckNumber.addEventListener("click", checkNumber);
+btnReplayGame.addEventListener("click", showGameOutput);
+btnGoMenu.addEventListener("click", GameMenu);
+btnListAllGame.addEventListener("click", getAllGame);
+btnListWinGame.addEventListener("click", getWinGame);
+btnListLostGame.addEventListener("click", getLossGame);
